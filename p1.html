@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="p1.css">
+    
+</head>
+<body>
+    <nav>
+        <h1><a href="index.html">PokPower</a></h1>
+        <div class="nav" id="link">
+            <a href="index.html">Home</a>
+            <a href="leader.html">Leader board</a>
+            <a href="#">Contact</a>
+             <img class="burger" src="image.png">
+        </div>
+    </nav>
+
+    <div class="container">
+        <div id="timerDisplay" style="display:none; font-size:28px; color:#CA4E52; margin-top:20px; font-weight:bold;">
+    เวลา: <span id="timeLeft">30</span> วินาที
+</div>
+        <h1 id="score">0</h1>
+        <div class="pic">
+        <img id="pic" src="popclose.png">
+        </div>
+    </div>
+    <!-- Modal เลือกโหมด -->
+<div id="modeModal" style="
+    position:fixed; top:0; left:0; width:100%; height:100%;
+    background:rgba(0,0,0,0.6); display:flex;
+    align-items:center; justify-content:center; z-index:999;">
+    <div style="
+        background:#F7EFCE; border-radius:16px; padding:40px;
+        text-align:center; box-shadow:0 8px 32px rgba(0,0,0,0.3);
+        max-width:400px; width:90%;">
+        <h2 style="color:#CA4E52; font-size:28px; margin-bottom:10px;">เลือกโหมด</h2>
+        <p style="color:#555; margin-bottom:30px;">เลือกวิธีที่คุณอยากเล่น</p>
+        <button onclick="startNormal()" style="
+            display:block; width:100%; padding:16px;
+            margin-bottom:16px; background:#CA4E52; color:white;
+            border:none; border-radius:10px; font-size:18px; cursor:pointer;">
+            โหมดธรรมดา
+            <br><small style="font-size:13px; opacity:0.85">ไม่จับเวลา ไม่เก็บคะแนน</small>
+        </button>
+        <button onclick="showNameInput()" style="
+            display:block; width:100%; padding:16px;
+            background:#e07b3f; color:white;
+            border:none; border-radius:10px; font-size:18px; cursor:pointer;">
+            โหมดจับเวลา
+            <br><small style="font-size:13px; opacity:0.85">30 วินาที — บันทึกคะแนน</small>
+        </button>
+        <!-- ช่องกรอกชื่อ (ซ่อนไว้ก่อน) -->
+        <div id="nameInputArea" style="display:none; margin-top:20px;">
+            <input id="playerName" type="text" placeholder="กรอกชื่อของคุณ"
+                style="width:100%; padding:12px; border:2px solid #CA4E52;
+                border-radius:8px; font-size:16px; box-sizing:border-box; margin-bottom:12px;">
+            <button onclick="startTimed()" style="
+                width:100%; padding:14px; background:#CA4E52; color:white;
+                border:none; border-radius:10px; font-size:16px; cursor:pointer;">
+                เริ่มเล่น!
+            </button>
+        </div>
+    </div>
+</div>
+    <script>
+    const score = document.getElementById("score")
+    const pic = document.getElementById("pic")
+    const modal = document.getElementById("modeModal")
+    const timerDisplay = document.getElementById("timerDisplay")
+    const timeLeftEl = document.getElementById("timeLeft")
+    let nomal = true
+    let fire = false
+    let elelec = false
+
+    let isTimedMode = false
+    let gameActive = false
+    let countdown = null
+    let currentPlayerName = ""
+
+    // --- โหมดธรรมดา ---
+    function startNormal() {
+        isTimedMode = false
+        gameActive = true
+        modal.style.display = "none"
+        score.innerText = "0"
+        timerDisplay.style.display = "none"
+    }
+
+    // --- แสดงช่องกรอกชื่อ ---
+    function showNameInput() {
+        document.getElementById("nameInputArea").style.display = "block"
+    }
+
+    // --- โหมดจับเวลา ---
+    function startTimed() {
+        const nameInput = document.getElementById("playerName").value.trim()
+        if (!nameInput) { alert("กรุณากรอกชื่อก่อนนะครับ!"); return }
+        currentPlayerName = nameInput
+        isTimedMode = true
+        gameActive = true
+        modal.style.display = "none"
+        score.innerText = "0"
+        timerDisplay.style.display = "block"
+        timeLeftEl.innerText = "30"
+
+        let timeLeft = 30
+        countdown = setInterval(() => {
+            timeLeft--
+            timeLeftEl.innerText = timeLeft
+            if (timeLeft <= 0) {
+                clearInterval(countdown)
+                gameActive = false
+                saveScore(currentPlayerName, Number(score.innerText))
+                alert(`หมดเวลา! ${currentPlayerName} ได้ ${score.innerText} คะแนน!`)
+            }
+        }, 1000)
+    }
+
+    // --- บันทึกคะแนนลง localStorage ---
+    function saveScore(name, points) {
+        let board = JSON.parse(localStorage.getItem("leaderboard") || "[]")
+        board.push({ name, score: points, date: new Date().toLocaleDateString("th-TH") })
+        board.sort((a, b) => b.score - a.score)
+        board = board.slice(0, 10) // เก็บแค่ Top 10
+        localStorage.setItem("leaderboard", JSON.stringify(board))
+    }
+
+    // --- คลิกรูป ---
+    pic.addEventListener("click", () => {
+        if (!gameActive) return
+        let curr = Number(score.innerText)
+        score.innerText = curr + 1
+        if(curr>=100){
+            fire = true
+            nomal = false
+            elelec = false
+        }
+        if(curr>=200){
+            elelec = true
+            nomal = false
+            fire = false
+        }
+        console.log("POKPOK")
+    })
+
+    pic.addEventListener("mousedown", () => {
+        if (!gameActive) return
+        // pic.src = "popopen.png"
+        if(fire){
+            pic.src = "popopenfire.png"
+        }
+        else if(elelec){
+            pic.src = "popopenele.png"
+        }
+        else{
+            pic.src = "popopen.png"
+        }
+        pic.style.width = "800px"    
+    })
+
+    pic.addEventListener("mouseup", () => {
+        if (!gameActive) return
+        if(fire){
+            pic.src = "popclosefire.png"
+        }
+        else if(elelec){
+            pic.src = "popcloseele.png"
+        }
+        else{
+            pic.src = "popclose.png"
+        }
+        pic.style.width = "700px"
+    })
+    
+</script>
+</body>
+</html>

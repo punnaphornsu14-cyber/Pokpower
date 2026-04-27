@@ -1,0 +1,110 @@
+body{
+    margin: 0;
+    width: 100%;
+    height: 100vh;
+
+}
+nav{
+    height: 80px;
+    background-color: #CA4E52;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+h1{
+    margin: 0;
+    padding-left: 40px;
+    font-size: 50px;
+    display: flex;
+    align-items: center;
+}
+.nav{
+    padding-right: 100px;
+    justify-items: space-between;
+    gap: 100px;
+    display: flex;
+}
+a{
+    text-decoration: none;
+    color: black;
+    font-size: 20px;
+    text-align: centers;
+}
+.container{
+    background-color: #F7EFCE;
+    width: 100%;
+    height: 80vh;
+    justify-content: center;
+    align-items:end;
+    display: flex;
+    padding-bottom: 50px;
+    flex-direction: column;
+    
+}
+.list{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+}
+.reader{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    flex-direction: column;
+}
+p{
+    font-size: 10px;
+    padding-bottom: 20px;
+    background-color: #555;
+    width: 80%;
+    margin: 0;
+    background-color: #B5BC7B;
+    display: flex;
+    flex-direction: row;
+    border-style: solid;
+    border-width: 1px;
+}
+.l{
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    width: 80%;
+}
+.h{
+    background-color: #B5BC7B;
+    display: block;
+    flex-direction: row;
+    border-style: solid;
+    border-width: 1px;
+    font-size: 20px;
+}
+footer{
+    display: flex ;
+    background-color: #D9D9D9;
+    height: 100px;
+    width: 100%;
+}
+*{
+    font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+@media  (max-width: 600px) {
+    .button{
+        font-size: 20px;
+        padding: 20px;
+        width: 200px;
+    }
+    a{
+        font-size: 10px;
+        display: flex;
+        text-align: center;
+    }
+    .pstart{
+        width: 60%;
+    }
+    footer{
+        height: 50px;
+    }
+}

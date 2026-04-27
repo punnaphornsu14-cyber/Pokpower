@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Leaderboard</title>
+    <link rel="stylesheet" href="p1.css">
+    <style>
+        .lb-wrapper {
+            background-color: #F7EFCE;
+            min-height: 80vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 40px 20px;
+        }
+        .lb-title {
+            color: #CA4E52;
+            font-size: 42px;
+            margin-bottom: 30px;
+        }
+        .lb-table {
+            width: 100%;
+            max-width: 600px;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .lb-table thead {
+            background-color: #CA4E52;
+            color: white;
+        }
+        .lb-table th, .lb-table td {
+            padding: 16px 20px;
+            text-align: center;
+            font-size: 18px;
+        }
+        .lb-table tbody tr:nth-child(even) {
+            background-color: #fdf5dc;
+        }
+        .lb-table tbody tr:hover {
+            background-color: #f5e6b0;
+        }
+        .rank-1 { 
+            color: gold; 
+            font-size: 22px; 
+        }
+        .empty-msg {
+            color: #888;
+            font-size: 20px;
+            margin-top: 40px;
+        }
+        .clear-btn {
+            margin-top: 30px;
+            padding: 12px 30px;
+            background: #CA4E52;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        .clear-btn:hover { background: #a33a3e; }
+
+        @media (max-width: 900px) {
+            .lb-title { font-size: 28px; }
+            .lb-table th, .lb-table td { font-size: 15px; padding: 12px; }
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <h1><a href="index.html">PokPower</a></h1>
+        <div class="nav" id="link">
+            <a href="index.html">Home</a>
+            <a href="leader.html">Leader board</a>
+            <a href="#">Contact</a>
+            <img class="burger" src="image.png">
+        </div>
+    </nav>
+
+    <div class="lb-wrapper">
+        <h2 class="lb-title" id="N">Leaderboard</h2>
+
+        <table class="lb-table" id="lbTable">
+            <thead>
+                <tr>
+                    <th>อันดับ</th>
+                    <th>ชื่อ</th>
+                    <th>คะแนน</th>
+                    <th>วันที่</th>
+                </tr>
+            </thead>
+            <tbody id="lbBody">
+            </tbody>
+        </table>
+
+        <p class="empty-msg" id="emptyMsg" style="display:none;">ยังไม่มีคะแนน — ไปเล่นก่อนเลย! 🎮</p>
+        <button class="clear-btn" onclick="clearBoard()">ล้างคะแนนทั้งหมด</button>
+    </div>
+
+    <script>
+        const medals = ["1", "2", "3"]
+
+        function loadBoard() {
+            const board = JSON.parse(localStorage.getItem("leaderboard") || "[]")
+            const tbody = document.getElementById("lbBody")
+            const emptyMsg = document.getElementById("emptyMsg")
+            tbody.innerHTML = ""
+
+            if (board.length === 0) {
+                document.getElementById("lbTable").style.display = "none"
+                emptyMsg.style.display = "block"
+                return
+            }
+
+            document.getElementById("lbTable").style.display = "table"
+            emptyMsg.style.display = "none"
+
+            board.forEach((entry, i) => {
+                const tr = document.createElement("tr")
+                const rank = medals[i] || `#${i + 1}`
+                tr.innerHTML = `
+                    <td style="font-size:${i < 3 ? '24px' : '18px'}">${rank}</td>
+                    <td>${entry.name}</td>
+                    <td><strong>${entry.score}</strong></td>
+                    <td>${entry.date}</td>
+                `
+                tbody.appendChild(tr)
+            })
+        }
+
+        function clearBoard() {
+            if (confirm("ล้างคะแนนทั้งหมดจริงๆ เหรอ?")) {
+                localStorage.removeItem("leaderboard")
+                loadBoard()
+            }
+        }
+
+        loadBoard()
+    const leaderboard = document.getElementById("N")
+
+    leaderboard.addEventListener("click",()=>{
+        console.log("POKPOK")
+    })
+    </script>
+</body>
+</html>
